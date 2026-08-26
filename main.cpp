@@ -52,6 +52,25 @@ void generateCodes(Node* root, string code, unordered_map<char, string>& codes) 
     generateCodes(root->right, code + "1", codes);
 }
 
+string decode(Node* root, string encoded) {
+    string decoded = "";
+    Node* current = root; // tells where we are currently in the tree.. initially at root
+
+    for (char bit : encoded) { // for every bit.. like for every char.. calling 'bit' cus 0,1.
+        if (bit == '0') {
+            current = current->left; // go left
+        } else {
+            current = current->right; // go right
+        }
+        // check if leaf (leaves represent chars.)
+        if (current->left == nullptr && current->right == nullptr) {
+            decoded += current->ch; // add that character
+            current = root; // go back to root (cus we will be at leaf if not done). reset essentially.
+        }
+    }
+    return decoded;
+}
+
 int main() {
 
     string text = "banana";
@@ -114,8 +133,9 @@ int main() {
     for (char ch : text) { // this is original text defined in beginning of main()
         encoded += codes[ch]; // append this char's huffman code
     }
-    
-    cout << "encoded:" << encoded; // concatenated encoded string of huffman code
+    cout << "encoded:" << encoded << endl; // concatenated encoded string of huffman code
 
+    string decoded = decode(root, encoded);
+    cout << "decoded:" << decoded << endl;
     return 0;
 }
