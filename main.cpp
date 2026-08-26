@@ -109,5 +109,13 @@ int main() {
     unordered_map<char, string> codes; // map to store the huffman codes
     generateCodes(root, "", codes);
 
+    // encode the text
+    string encoded = ""; 
+    for (char ch : text) { // this is original text defined in beginning of main()
+        encoded += codes[ch]; // append this char's huffman code
+    }
+    
+    cout << "encoded:" << encoded; // concatenated encoded string of huffman code
+
     return 0;
 }
