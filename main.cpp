@@ -5,7 +5,6 @@
 
 using namespace std;
 
-
 struct Node {
     char ch;
     int freq;
@@ -20,9 +19,10 @@ struct Node {
     }
 };
 
+// priority_queue expects a Type for the third template parameter
 struct Compare {
     bool operator()(Node* a, Node* b) {
-        return a->freq > b->freq;
+        return a->freq > b->freq; //  smaller freq = higher priority
     }
 };
 
@@ -52,10 +52,33 @@ int main() {
         minHeap.push(node);
     }
 
-    // check node with smallest freq.
-    Node* smallest = minHeap.top();
-    cout << smallest->ch << " : "
-         << smallest->freq << endl; 
+    // // check node with smallest freq.
+    // Node* smallest = minHeap.top();
+    // cout << smallest->ch << " : "
+    //      << smallest->freq << endl; 
+
+
+    while (minHeap.size() > 1) {
+        Node* left = minHeap.top();
+        minHeap.pop(); // cus we already saved the min. at that state
+        //same for right for next min.
+        Node* right = minHeap.top();
+        minHeap.pop();
+
+        // now create new node to combine
+        Node* parent = new Node('\0', left->freq + right-> freq); // left.freq is 1, right.freq is 2. so total 3.
+        // now our node will look like ['\0', 3]. \0 cus node is not representing a character, we dont need that.
+
+        // now connect old nodes to the new one
+        parent->left = left; // the left we got from minHeap.top()
+        parent->right = right; // the right we got from minHeap.top()
+
+        // put this newly created node 'parent' back to the minHeap.
+        minHeap.push(parent);
+    }
+
+    // points to the top of the huffman tree
+    Node* root = minHeap.top();
 
     return 0;
 }
