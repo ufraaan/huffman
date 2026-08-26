@@ -33,22 +33,23 @@ struct Compare {
         3. go right -> add "1"
         4. when we reach a char. node --> save code for that char.
 */
-void generateCodes(Node* root, string code) {
+void generateCodes(Node* root, string code, unordered_map<char, string>& codes) {
     if (root == nullptr) {
         return;
     }
 
-    // we reached char node
+    // we reached leaf node
     if (root->left == nullptr && root->right == nullptr) {
-        cout << root->ch << " : " << code << endl;
+        // cout << root->ch << " : " << code << endl;
+        codes[root->ch] = code;
         return;
     }
 
     // go left and add 0
-    generateCodes(root->left, code + "0");
+    generateCodes(root->left, code + "0", codes);
     
     // go right and add 1
-    generateCodes(root->right, code + "1");
+    generateCodes(root->right, code + "1", codes);
 }
 
 int main() {
@@ -104,7 +105,9 @@ int main() {
 
     // points to the top of the huffman tree
     Node* root = minHeap.top();
-    generateCodes(root, "");
+
+    unordered_map<char, string> codes; // map to store the huffman codes
+    generateCodes(root, "", codes);
 
     return 0;
 }
