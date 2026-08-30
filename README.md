@@ -2,7 +2,6 @@
 
 a simple huffman coding implementation in c++. encodes text into variable-length binary codes based on character frequency, then decodes it back.
 
-
 ## todo
 
 - [x] encode text into huffman codes based on character frequency

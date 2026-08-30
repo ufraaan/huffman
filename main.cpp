@@ -71,9 +71,36 @@ string decode(Node* root, string encoded) {
     return decoded;
 }
 
+vector<unsigned char> packBits(const string& bits) {
+
+    vector<unsigned char> bytes; // store packed bytes here eventually
+    unsigned char currentByte = 0; 
+    int bitCount = 0;
+
+    for (char bit : bits) {
+        currentByte <<= 1; // shift one pos. to left (to make room)..
+        if (bit == '1') {
+            currentByte |= 1; // put incoming 0 or 1 in that empty pos.
+        }
+        bitCount++;
+        if (bitCount == 8) {
+            bytes.push_back(currentByte);
+            // reset for next byte
+            currentByte = 0;
+            bitCount = 0;
+        }
+    }
+    // handle remaining bits (pad)
+    if (bitCount > 0) {
+        currentByte <<= (8 - bitCount);
+        bytes.push_back(currentByte);
+    }
+    return bytes;
+}
+
 int main() {
 
-    string text = "banana";
+    string text = "the quick brown fox jumps over the lazy dog";
     // count freq. of every letter
     unordered_map<char, int> freq;
     for (char ch : text) {
@@ -133,6 +160,16 @@ int main() {
     for (char ch : text) { // this is original text defined in beginning of main()
         encoded += codes[ch]; // append this char's huffman code
     }
+    vector<unsigned char> packed = packBits(encoded);
+    cout << "packed bytes: " << packed.size() << endl;
+
+    for (unsigned char byte : packed) {
+        for (int i = 7; i >= 0; i--) {
+            cout << ((byte >> i) & 1);  // packed bytes in binary 
+        }
+        cout << " ";
+    }
+    cout << endl;
     cout << "encoded:" << encoded << endl; // concatenated encoded string of huffman code
 
     string decoded = decode(root, encoded);
